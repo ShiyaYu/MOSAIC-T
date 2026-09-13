@@ -9,7 +9,7 @@
 
 ## 📖 Project Overview
 
-**MOSAIC-T** is a deep generative learning framework designed to solve the "mosaic data missingness" problem in single-cell multi-omics. It is specifically tailored to analyze the immunosenescence and terminal exhaustion of CD8+ T cells, particularly the highly expanded NKG2C+ memory T cell subset during aging and chronic viral infections.
+**MOSAIC-T** is a deep generative learning framework designed to solve the "mosaic data missingness" problem in single-cell multi-omics. It is specifically tailored to analyze the immunosenescence and terminal exhaustion of T cells during aging.
 
 While traditional single-omics studies are limited to observational correlations, MOSAIC-T aims to establish the causal chain: **Clonal Expansion $\\rightarrow$ Gene Regulation $\\rightarrow$ Phenotypic Exhaustion**. Our ultimate goal is not just to generate aesthetically pleasing clustering plots, but to build an *in-silico* digital twin simulator capable of modeling "cellular rejuvenation."
 
@@ -17,13 +17,13 @@ While traditional single-omics studies are limited to observational correlations
 
 ## 🧬 Biological Background & The "Mosaic Dilemma"
 
-To fully understand why CD8+ NKG2C+ T cells become exhausted, we need three pieces of information simultaneously:
+To fully understand why T cells become exhausted, we need three pieces of information simultaneously:
 1.  **RNA**: Current physical state and transcriptional activity.
 2.  **ATAC**: Chromatin accessibility and upstream epigenetic regulatory potential.
 3.  **TCR**: Absolute clonal identity and antigen-driven history.
 
 **The Computational Challenge:**
-Real-world datasets exist as "data silos" (e.g., CIMA 10M cells has only RNA+ATAC; Immunity 2023 has only RNA+TCR). Existing top-tier models (like totalVI, scVI) strongly rely on "fully paired" multi-omics data. Forcing intersections on partially overlapping datasets leads to massive feature loss or complete failure. 
+Real-world datasets exist as "data silos". Existing top-tier models (like totalVI, scVI) strongly rely on "fully paired" multi-omics data. Forcing intersections on partially overlapping datasets leads to massive feature loss or complete failure. 
 
 **MOSAIC-T** asks: *How can we infer the non-linear joint distribution of RNA, ATAC, and TCR in a model that has never "seen" all three simultaneously?*
 
@@ -41,10 +41,6 @@ MOSAIC-T is built upon an **Anchor-Satellite Asynchronous VAE-GAN** architecture
 *   Breaking the "black box" of deep learning. We introduce a `MaskedLinear` mechanism in the first layer of the RNA encoder.
 *   Using prior Gene Regulatory Networks (Regulons) from SCENIC+, we perform a Hadamard product (hard pruning) to sever all biologically implausible TF-Gene weights. 
 *   **Result**: Latent dimensions represent explicit Transcription Factor (TF) activity states, not just statistical principal components.
-
-### 3. TCR Contrastive Gravity (TCR 对比引力场)
-*   Discrete amino acid sequences cannot be directly computed with continuous expression matrices. 
-*   We utilize **InfoNCE Contrastive Learning**: Cells sharing the same TCR clonal expansion sequence act as positive pairs. This exerts a "gravity" in the latent space, forcing cells from the same clonal family to heavily aggregate on the RNA/ATAC phenotypic manifold.
 
 ---
 
